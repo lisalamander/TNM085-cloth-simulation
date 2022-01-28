@@ -56,8 +56,8 @@ while t < 5
     % Sum of forces for each node
     node(1).f_sum = -f_g - f12 + f41 - (fd12 - fd41);
     node(2).f_sum = -f_g + f12 - f23 - (-fd12 + fd23);
-    node(3).f_sum = -f_g + f23 - f34 - (-f23 + f34);
-    node(4).f_sum = -f_g + f34 - f41 - (-f34 + f41);
+    node(3).f_sum = -f_g + f23 - f34 - (-fd23 + fd34);
+    node(4).f_sum = -f_g + f34 - f41 - (-fd34 + fd41);
     % Numerical method for each nodes acceleration to position
     for i = 1:4
         node(i).a = 1/m(i) * node(i).f_sum;

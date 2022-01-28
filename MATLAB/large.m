@@ -15,7 +15,7 @@ m = 1;
 k = 30;
 
 % Damping constant
-c = 5;
+c = 10;
 % Initial positions and velocities
 for i = 1:rows
     for j = 1:cols
@@ -117,23 +117,6 @@ while t < 5
             end
         end
     end
-
-    % Diff between velocities
-    %     v1 = node(1).v-node(2).v;
-    %     v2 = node(2).v-node(3).v;
-    %     v3 = node(3).v-node(4).v;
-    %     v4 = node(4).v-node(1).v;
-    %     v5 = node(1).v-node(3).v; % diagonal velocity
-    %     v6 = node(2).v-node(4).v; % -- || --
-
-
-    % Damping forces
-    %     fd12 = c*v1;
-    %     fd23 = c*v2;
-    %     fd34 = c*v3;
-    %     fd41 = c*v4;
-    %     fd13 = c*v5;
-    %     fd24 = c*v6;
 
     for i = 1:rows
         for j = 1:cols
