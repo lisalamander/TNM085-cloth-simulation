@@ -1,16 +1,16 @@
 function large()
 clear
 clf
-fig = uifigure;
-s = uislider(fig);
-s.Value = 20;
-rows = 10;
-cols = 10;
+rows = 15;
+cols = 15;
 
 circle.r = 0.3;
 circle.pos = [0.5 -0.5];
 
 S.h = plot(0, 0);
+fig = uifigure;
+s = uislider(fig);
+s.Value = 20;
 
 test = [0 0];
 L = 0.5/(cols-1);
@@ -20,7 +20,7 @@ h = 0.01;
 % Masses
 m = 1;
 % Spring constant
-k = 30;
+k = 200;
 
 % Damping constant
 c = 10;
@@ -42,7 +42,7 @@ canvas = createCanvas(node,cols, rows);
 % Initial time
 t = 0;
 
-while t < 5
+while true
     for i = 1:rows
         for j = 1:cols
             if node(i,j).isFixed == false
@@ -66,6 +66,11 @@ while t < 5
                     x2 = node(i,j).p-node(i,j-1).p;
                     X2 = norm(x2);
                     f2 = -k*(X2-L)*x2/X2;
+                    if j > 2
+                        x2 = node(i,j).p-node(i,j-2).p;
+                        X2 = norm(x2);
+                        fb2 = -k2*(X2-L)*x2/X2;    
+                    end
                 end
                 if i < rows && j > 1
                     x3 = node(i,j).p-node(i+1,j-1).p;
@@ -76,6 +81,11 @@ while t < 5
                     x4 = node(i,j).p-node(i+1,j).p;
                     X4 = norm(x4);
                     f4 = -k*(X4-L)*x4/X4;
+                    if i < rows-1
+                        x4 = node(i,j).p-node(i+2,j).p;
+                        X4 = norm(x4);
+                        fb4 = -k2*(X4-L)*x4/X4;
+                    end
                 end
                 if i < rows && j < cols
                     x5 = node(i,j).p-node(i+1,j+1).p;
@@ -86,6 +96,11 @@ while t < 5
                     x6 = node(i,j).p-node(i,j+1).p; %
                     X6 = norm(x6);
                     f6 = -k*(X6-L)*x6/X6;
+                    if j < cols - 1
+                         x6 = node(i,j).p-node(i,j+2).p; %
+                        X6 = norm(x6);
+                        fb6 = -k2*(X6-L)*x6/X6;
+                    end
                 end
                 if i > 1 && j < cols
                     x7 = node(i,j).p-node(i-1,j+1).p;
@@ -96,6 +111,11 @@ while t < 5
                     x8 = node(i,j).p-node(i-1,j).p;
                     X8 = norm(x8);
                     f8 = -k*(X8-L)*x8/X8;
+                    if i > 2
+                        x8 = node(i,j).p-node(i-2,j).p;
+                        X8 = norm(x8);
+                        fb8 = -k2*(X8-L)*x8/X8;
+                    end
                 end
                 f_d  = node(i,j).v*c;
                 node(i,j).f_sum = f1+f2+f3+f4+f5+f6+f7+f8-f_g-f_d;
@@ -155,7 +175,7 @@ while t < 5
     set(S.h, 'XData', canvas(:,1));
     set(S.h, 'YData', canvas(:,2));
     
-    circle.pos(1) = s.value /
+    circle.pos(1) = s.Value / 100-0.5;
     drawnow;
   
     pause(h)
