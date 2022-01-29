@@ -1,13 +1,17 @@
 function large()
 clear
 clf
-
+fig = uifigure;
+s = uislider(fig);
+s.Value = 20;
 rows = 10;
 cols = 10;
 
 circle.r = 0.3;
 circle.pos = [0.5 -0.5];
+
 S.h = plot(0, 0);
+
 test = [0 0];
 L = 0.5/(cols-1);
 L2 = sqrt(L^2 + L^2);
@@ -151,6 +155,7 @@ while t < 5
     set(S.h, 'XData', canvas(:,1));
     set(S.h, 'YData', canvas(:,2));
     
+    circle.pos(1) = s.value /
     drawnow;
   
     pause(h)

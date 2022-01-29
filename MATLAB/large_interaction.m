@@ -1,21 +1,26 @@
+function large()
 clear
 clf
-hold on
-xlim([0 1])
-ylim([0 1])
+rows = 15;
+cols = 15;
 
-rows = 3;
-cols = 3;
+circle.r = 0.3;
+circle.pos = [0.5 -0.5];
 
-L = 0.5/(cols-1)-0.1;
+S.h = plot(0, 0);
+fig = uifigure;
+s = uislider(fig);
+s.Value = 20;
+
+test = [0 0];
+L = 0.5/(cols-1);
 L2 = sqrt(L^2 + L^2);
-
 f_g = [0 9.82];
 h = 0.01;
 % Masses
 m = 1;
 % Spring constant
-k = 30;
+k = 200;
 
 % Damping constant
 c = 10;
@@ -33,14 +38,11 @@ for i = 1:rows
     end
 end
 
+canvas = createCanvas(node,cols, rows);
 % Initial time
 t = 0;
 
-while t < 5
-    clf
-    hold on
-    xlim([0 1])
-    ylim([0 1])
+while true
     for i = 1:rows
         for j = 1:cols
             if node(i,j).isFixed == false
@@ -52,7 +54,8 @@ while t < 5
                 f6 = [0 0];
                 f7 = [0 0];
                 f8 = [0 0];
-               
+             
+
                 % Distances between nodes
                 if i > 1 && j > 1
                     x1 = node(i,j).p-node(i-1,j-1).p;
@@ -96,15 +99,16 @@ while t < 5
                 end
                 f_d  = node(i,j).v*c;
                 node(i,j).f_sum = f1+f2+f3+f4+f5+f6+f7+f8-f_g-f_d;
+
                 % Calc acceleration
                 node(i,j).a = 1/m * node(i,j).f_sum;
                 % Numerical method to get p
                 node(i,j) = simpleEuler(node(i,j),h);
 
                 % Check if outside borders
-                if node(i,j).p(2) < 0
+                if node(i,j).p(2) < -1
                     node(i,j).v(2) = -1*(node(i,j).v(2));
-                    node(i,j).p(2) = 0;
+                    node(i,j).p(2) = -1;
                 elseif node(i,j).p(2) > 1
                     node(i,j).v(2) = -1*(node(i,j).v(2));
                     node(i,j).p(2) = 1;
@@ -116,31 +120,67 @@ while t < 5
                     node(i,j).v(1) = -1*(node(i,j).v(1));
                     node(i,j).p(1) = 1;
                 end
+
+                % Sphere intersection
+                nodeToCircle = node(i,j).p-circle.pos;
+                distToCircle = norm(nodeToCircle);
+                if  distToCircle < circle.r
+                    circleBorder = circle.r * nodeToCircle / distToCircle;
+                    node(i,j).p = circle.pos + circleBorder;
+                    node(i,j).v = -1*node(i,j).v;
+                end
             end
         end
     end
-
-    for i = 1:rows
-        for j = 1:cols
-            plot(node(i,j).p(1), node(i,j).p(2), ".b", 'MarkerSize', 20)
-            if i > 1 && j > 1
-                v(end+1)
-                %plot([node(i,j).p(1) node(i-1,j-1).p(1)], [node(i,j).p(2) node(i-1,j-1).p(2)])
-            end
-            if j > 1
-                plot([node(i,j).p(1) node(i,j-1).p(1)], [node(i,j).p(2) node(i,j-1).p(2)])
-            end
-            if i < rows
-                plot([node(i,j).p(1) node(i+1,j).p(1)], [node(i,j).p(2) node(i+1,j).p(2)])
-            end
-            %             if i > 1 && j < cols
-            %                 plot([node(i,j).p(1) node(i-1,j+1).p(1)], [node(i,j).p(2) node(i-1,j+1).p(2)])
-            %             end
+    index = 1;
+    for c = 1 : cols
+        % Vertical line, going down
+        for r = rows : -1 : 1
+            canvas(index, :) = node(r, c).p;
+            index = index + 1;
         end
+
+        % Zig-zag line, going up
+        for r = 1 : rows
+            canvas(index,:) = node(r,c).p;
+            index = index + 1;
+            if (c < cols)
+                canvas(index ,:) = node(r, c + 1).p;
+                index = index + 1;
+            end
+        end
+
     end
-
-
+    
+    set(S.h, 'XData', canvas(:,1));
+    set(S.h, 'YData', canvas(:,2));
+    
+    circle.pos(1) = s.Value / 100-0.5;
+    drawnow;
+  
     pause(h)
     t = t+h;
+end
+
+
 
 end
+%%
+function canvas = createCanvas(nodes,cols,rows)
+% Graphic thingy
+index = 1;
+for c = 1 :cols
+    for r = 1 : rows
+        canvas(index,:) = nodes(r, c).p;
+        index = index + 1;
+    end
+end
+
+canvas_min = min(canvas);
+canvas_max = max(canvas);
+range = canvas_max - canvas_min;
+
+xlim([canvas_min(1)-range(1) canvas_max(1)+range(1)])
+ylim([canvas_min(2)-range(2)*3 canvas_max(2)+range(2)])
+end
+
