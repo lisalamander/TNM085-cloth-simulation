@@ -1,27 +1,35 @@
 function large()
 clear
 clf
+% Settings
 rows = 10;
 cols = 10;
-
+% Create circle object
 circle.r = 0.3;
 circle.pos = [0.5 -0.2];
-
+% Create graphical object
 S.h = plot(0, 0);
+% Create slider
 fig = uifigure;
 s = uislider(fig);
 s.Value = 20;
 
-test = [0 0];
+% Natural length for stretch springs
 L = 0.5/(cols-1);
+% Natural length for shear springs
 L2 = sqrt(L^2 + L^2);
+% Natural length for bend springs
 L3 = L*2;
-f_g = [0 9.82];
-h = 0.01;
-% Masses
+% Mass
 m = 1;
-% Spring constant
+% Gravity
+f_g = m*[0 9.82];
+% Step size
+h = 0.01;
+
+% Spring constant stretch and shear forces
 k = 200;
+% Spring constant bend forces
 k2 = 50;
 
 % Damping constant
@@ -31,7 +39,8 @@ for i = 1:rows
     for j = 1:cols
         node(i,j).p = [((j-1)/(cols-1))/2+0.25 ((i-1)/(cols-1))/2+0.5];
         node(i,j).v = [0 0];
-        if i == 1
+        % Fixed nodes 
+        if i == 1 
             node(i,j).isFixed = true;
         else
             node(i,j).isFixed = false;
@@ -41,13 +50,13 @@ for i = 1:rows
 end
 
 canvas = createCanvas(node,cols, rows);
-% Initial time
-t = 0;
+
 
 while true
     for i = 1:rows
         for j = 1:cols
             if node(i,j).isFixed == false
+                % Stretch and shear forces
                 f1 = [0 0];
                 f2 = [0 0];
                 f3 = [0 0];
@@ -56,6 +65,7 @@ while true
                 f6 = [0 0];
                 f7 = [0 0];
                 f8 = [0 0];
+                % Ben forces
                 fb2 = [0 0];
                 fb4 = [0 0];
                 fb6 = [0 0];
@@ -123,7 +133,9 @@ while true
                         fb8 = -k2*(X8-L3)*x8/X8;
                     end
                 end
+                % Damping force
                 f_d  = node(i,j).v*c;
+                % Sum of forces
                 node(i,j).f_sum = f1+f2+f3+f4+f5+f6+f7+f8+fb2+fb4+fb6+fb8-f_g-f_d;
 
                 % Calc acceleration
@@ -160,13 +172,23 @@ while true
     end
     index = 1;
     for c = 1 : cols
-        % Vertical line, going down
+        % Vertical line, going down %
+        % *    *    *               %
+        % |                         %
+        % *    *    *               %    
+        % |                         %
+        % *    *    *               %
         for r = rows : -1 : 1
             canvas(index, :) = node(r, c).p;
             index = index + 1;
         end
-
         % Zig-zag line, going up
+         % Vertical line, going down %
+        % *    *    *               %
+        % |  \                      %
+        % * -- *    *               %    
+        % |  \                      %
+        % * -- *    *               %
         for r = 1 : rows
             canvas(index,:) = node(r,c).p;
             index = index + 1;
@@ -181,11 +203,13 @@ while true
     set(S.h, 'XData', canvas(:,1));
     set(S.h, 'YData', canvas(:,2));
     
+    % Set circle pos
     circle.pos(1) = s.Value / 100-0.5;
+    % Draw figure
     drawnow;
   
-    pause(h)
-    t = t+h;
+    
+   
 end
 
 
