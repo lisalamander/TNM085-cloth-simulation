@@ -78,8 +78,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>E:\Liu\MT\TNM085\project\TNM085-cloth-simulation\ClothSimulation\dependencies;$(IncludePath)</IncludePath>
-    <LibraryPath>E:\Liu\MT\TNM085\project\TNM085-cloth-simulation\ClothSimulation\libs;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\Karl Wastesson\Documents\TNM085\ClothSimulation\dependencies;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Karl Wastesson\Documents\TNM085\ClothSimulation\libs;E:\Liu\MT\TNM085\4project\TNM085-cloth-simulation\ClothSimulation\libs;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -114,11 +114,11 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -143,17 +143,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Cloth.h" />
     <ClInclude Include="includes\Shader.h" />
     <ClInclude Include="includes\Texture.h" />
     <ClInclude Include="includes\TriangleSoup.hpp" />
     <ClInclude Include="includes\Utilities.hpp" />
+    <ClInclude Include="Node.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\fragment.glsl" />
     <None Include="shaders\vertex.glsl" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Cloth.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Node.cpp" />
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\imageloader.cpp" />
     <ClCompile Include="src\Shader.cpp" />

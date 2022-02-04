@@ -5,7 +5,7 @@ clf
 rows = 10;
 cols = 10;
 
-circle.r = 0.3;
+circle.r = 0.2;
 circle.pos = [0.5 -0.5];
 S.h = plot(0, 0);
 test = [0 0];
