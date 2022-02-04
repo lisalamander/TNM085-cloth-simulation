@@ -10,8 +10,12 @@
 #include "includes/Shader.h"
 
 #include "includes/TriangleSoup.hpp"
-#include <iostream>
 
+#include <iostream>
+// #include <math.h>
+
+//Egna 
+#include "Node.h"
 // Initial screen dimensions
 const int SCR_WIDTH = 400;
 const int SCR_HEIGHT = 400;
@@ -51,13 +55,17 @@ int main() {
   // Create shader
     Shader myShader("shaders/vertex.glsl", "shaders/fragment.glsl");
     myShader.use();
-    glm::mat4 projection = glm::perspective((float)M_PI / 4.0f, (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 500.0f);
+
+    glm::mat4 projection = glm::perspective(M_PI / 4.0f, (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 500.0f);
+
+
     myShader.setMat4("projection", projection);
+ 
     // Create sphere object
     TriangleSoup sphere;
     sphere.createSphere(0.5, 30);
     
-
+    // Cloth myCloth(width, height);
 
     while (!glfwWindowShouldClose(window))
     {
@@ -79,7 +87,8 @@ int main() {
         myShader.use();
         myShader.setMat4("model", model);
         myShader.setMat4("view", glm::mat4(1.0f));
-        
+        // myCloth.update();
+        // myCloth.render();
         sphere.render();
         
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
