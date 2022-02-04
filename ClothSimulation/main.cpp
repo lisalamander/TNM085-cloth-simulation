@@ -10,7 +10,7 @@
 #include "includes/Shader.h"
 
 #include "includes/TriangleSoup.hpp"
-
+#include "includes/Cloth.h"
 #include <iostream>
 // #include <math.h>
 
@@ -65,7 +65,7 @@ int main() {
     TriangleSoup sphere;
     sphere.createSphere(0.5, 30);
     
-    // Cloth myCloth(width, height);
+    Cloth myCloth(10, 10);
 
     while (!glfwWindowShouldClose(window))
     {
@@ -88,9 +88,12 @@ int main() {
         myShader.setMat4("model", model);
         myShader.setMat4("view", glm::mat4(1.0f));
         // myCloth.update();
-        // myCloth.render();
         sphere.render();
-        
+        model = glm::mat4(1.0f);
+        myShader.use();
+        myShader.setMat4("model", model);
+
+        myCloth.render();
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
         glfwSwapBuffers(window);
@@ -106,4 +109,8 @@ int main() {
 void processInput(GLFWwindow* window) {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
+    if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_RELEASE)
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
