@@ -11,6 +11,7 @@
 
 #include "includes/TriangleSoup.hpp"
 #include <iostream>
+
 // Initial screen dimensions
 const int SCR_WIDTH = 400;
 const int SCR_HEIGHT = 400;
