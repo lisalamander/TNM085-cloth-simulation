@@ -12,6 +12,7 @@ private:
 #define IX(a,b) ((a) + (b) * cols);
 
 	void createVertexData();
+	void updateVertexData();
 	void createIndexData();
 	void sendVertexData();
 	void sendIndexData();
@@ -20,7 +21,7 @@ private:
 	std::vector<unsigned int> indicies;
 
 	int rows, cols;
-
+	const float k1, k2, damping_c;
 	unsigned int VBO, EAO, VAO;
 
 };

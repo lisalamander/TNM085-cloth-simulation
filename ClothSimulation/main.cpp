@@ -85,7 +85,7 @@ int main() {
         myShader.use();
         myShader.setMat4("model", model);
         myShader.setMat4("view", glm::mat4(1.0f));
-        // myCloth.update();
+        myCloth.updateSimulation(0.01);
         sphere.render();
         model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(0, 0, -5.0f));
