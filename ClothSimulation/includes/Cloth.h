@@ -3,8 +3,8 @@
 
 class Cloth {
 public:
-	
+
 private:
 
 
-}
+};

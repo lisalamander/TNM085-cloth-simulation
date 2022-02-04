@@ -15,7 +15,7 @@
 // #include <math.h>
 
 //Egna 
-#include "Node.h"
+#include "includes/Node.h"
 // Initial screen dimensions
 const int SCR_WIDTH = 1920/2;
 const int SCR_HEIGHT = 1080/2;
