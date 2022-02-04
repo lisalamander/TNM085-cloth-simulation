@@ -9,16 +9,11 @@ Cloth::Cloth(int x_size, int y_size): cols(x_size), rows(y_size) {
 	// Set vertex data
 	createVertexData();
 	// Send vertex data to GPU
-	glBindVertexArray(VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
+	sendVertexData();
 	// Set index data
 	createIndexData();
 	// Send index data to GPU
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EAO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indicies.size(), indicies.data(), GL_STATIC_DRAW);
+	sendIndexData();
 
 
 }
@@ -42,7 +37,7 @@ void Cloth::render() {
 void Cloth::createVertexData() {
 	for (int r = 0; r < rows; r++) {
 		for (int c = 0; c < cols; c++) {
-			nodes.push_back(glm::vec3((float)c/cols, (float)r/rows, -5));
+			nodes.push_back(glm::vec3((float)c/cols, (float)r/rows, 0));
 			Node n = nodes.back();
 			vertices.push_back(n.pos.x);
 			vertices.push_back(n.pos.y);
@@ -88,4 +83,29 @@ void Cloth::createIndexData() {
 	/*for (unsigned int i : indicies) {
 		std::cout << i << " ";
 	}*/
+}
+
+
+void Cloth::updateSimulation(float time_step) {
+	// clear vector data
+	// calculate forces
+	// calculate acceleration
+	// numerical method
+	// createVertexData();
+	// createIndexData();
+
+}
+
+void Cloth::sendVertexData() {
+	glBindVertexArray(VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+
+}
+
+void Cloth::sendIndexData() {
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EAO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indicies.size(), indicies.data(), GL_STATIC_DRAW);
 }

@@ -7,13 +7,16 @@ public:
 	Cloth(int x_size, int y_size);
 	~Cloth();
 	void render();
+	void updateSimulation(float time_step);
 private:
 #define IX(a,b) ((a) + (b) * cols);
 
 	void createVertexData();
 	void createIndexData();
+	void sendVertexData();
+	void sendIndexData();
 	std::vector<Node> nodes;
-	std::vector<float> vertices; // test
+	std::vector<float> vertices;
 	std::vector<unsigned int> indicies;
 
 	int rows, cols;

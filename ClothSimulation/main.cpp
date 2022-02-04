@@ -72,11 +72,9 @@ int main() {
         util::displayFPS(window);
         // Keyboard input
         processInput(window);
-        // Cursor position
         
         // rendering commands
-        //glEnable(GL_BLEND);
-        //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
         glEnable(GL_DEPTH_TEST);
         glClearColor(0.5f, 0.5f, 1.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -90,6 +88,7 @@ int main() {
         // myCloth.update();
         sphere.render();
         model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(0, 0, -5.0f));
         myShader.use();
         myShader.setMat4("model", model);
 
