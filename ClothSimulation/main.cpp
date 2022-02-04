@@ -12,8 +12,8 @@
 #include "includes/TriangleSoup.hpp"
 #include <iostream>
 // Initial screen dimensions
-const int SCR_WIDTH = 400;
-const int SCR_HEIGHT = 400;
+const int SCR_WIDTH = 1920/2;
+const int SCR_HEIGHT = 1080/2;
 const float M_PI = 3.1415927;
 
 void processInput(GLFWwindow* window);
