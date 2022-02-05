@@ -22,6 +22,9 @@ const int SCR_HEIGHT = 1080/2;
 const float M_PI = 3.1415927;
 
 void processInput(GLFWwindow* window);
+glm::mat4 mat4rotx(float angle);
+glm::mat4 mat4roty(float angle);
+glm::mat4 mat4rotz(float angle);
 
 int main() {
     // Initialize glfw
@@ -67,6 +70,14 @@ int main() {
     
     Cloth myCloth(10, 10);
 
+    // Stuff for cameramovement
+
+    util::KeyRotator myKeyRotator(window);
+    util::MouseRotator myMouseRotator(window);
+    glm::mat4 cameraMove = glm::mat4(0.0f);
+
+    
+
     while (!glfwWindowShouldClose(window))
     {
         util::displayFPS(window);
@@ -75,16 +86,24 @@ int main() {
         
         // rendering commands
 
+        //Get input
+        myKeyRotator.poll();
+        myMouseRotator.poll();
+
+
         glEnable(GL_DEPTH_TEST);
         glClearColor(0.5f, 0.5f, 1.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glEnable(GL_CULL_FACE);
+
+        //Camera
+        cameraMove = mat4rotz(myKeyRotator.theta()) * mat4roty(myKeyRotator.phi());
         
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(0, 0, -10.0f));
         myShader.use();
         myShader.setMat4("model", model);
-        myShader.setMat4("view", glm::mat4(1.0f));
+        myShader.setMat4("view", cameraMove);
         myCloth.updateSimulation(0.01);
         sphere.render();
         model = glm::mat4(1.0f);
@@ -112,4 +131,43 @@ void processInput(GLFWwindow* window) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_RELEASE)
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+}
+
+glm::mat4 mat4rotx(float angle) {
+
+
+    glm::mat4 rotateX = {
+         1.0f, 0.0f,       0.0f,        0.0f,
+         0.0f, cos(angle), sin(angle), 0.0f,
+         0.0f, -sin(angle), cos(angle),  0.0f,
+         0.0f, 0.0f,       0.0f,        1.0f };
+
+
+
+    return rotateX;
+
+}
+
+glm::mat4 mat4roty(float angle) {
+
+    glm::mat4 rotateY = {
+    cos(angle), 0.0f, -sin(angle), 0.0f,
+    0.0f,       1.0f,  0.0f,       0.0f,
+    sin(angle), 0.0f, cos(angle),0.0f,
+    0.0f,       0.0f,  0.0f,       1.0f };
+
+    return rotateY;
+
+
+}
+
+glm::mat4 mat4rotz(float angle) {
+
+    glm::mat4 rotateZ = {
+        cos(angle), sin(angle),  0.0f, 0.0f,
+       -sin(angle), cos(angle),  0.0f, 0.0f,
+        0.0f,        0.0f,       1.0f, 0.0f,
+        0.0f,        0.0f,       0.0f, 1.0f };
+
+    return rotateZ;
 }

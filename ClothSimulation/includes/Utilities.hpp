@@ -23,4 +23,46 @@ namespace util {
  */
 double displayFPS(GLFWwindow* window);
 
+
+
+class KeyRotator {
+public:
+    KeyRotator(GLFWwindow* window);
+
+    void poll();
+
+    double phi() const;
+    double theta() const;
+
+private:
+    GLFWwindow* window_;
+
+    double phi_;
+    double theta_;
+    double lastTime_;
+};
+
+class MouseRotator {
+public:
+    MouseRotator(GLFWwindow* window);
+
+    void poll();
+
+    double phi() const;
+    double theta() const;
+
+private:
+    GLFWwindow* window_;
+
+    double phi_;
+    double theta_;
+
+    double lastX_;
+    double lastY_;
+    bool leftPressed_;
+    bool rightPressed_;
+};
+
+
+
 }  // namespace util
