@@ -108,6 +108,8 @@ void MouseRotator::poll() {
 
         const double moveX = currentX - lastX_;
         const double moveY = currentY - lastY_;
+        deltaX_ = moveX;
+        deltaY_ = -moveY;
 
         phi_ += M_PI * moveX / windowWidth;  // Longest drag rotates 180 degrees
         if (phi_ >= M_PI * 2.0) {
@@ -124,7 +126,9 @@ void MouseRotator::poll() {
             theta_ = -M_PI / 2.0;  // Clamp at 90
         }
     }
-
+    if (currentRight && rightPressed_) {
+        deltaZ_ = currentX - lastX_;
+    }
     leftPressed_ = currentLeft;
     rightPressed_ = currentRight;
     lastX_ = currentX;
@@ -135,7 +139,7 @@ double MouseRotator::phi() const { return phi_; }
 
 double MouseRotator::theta() const { return theta_; }
 
-
+glm::vec3 MouseRotator::delta() const { return glm::vec3(deltaX_, deltaY_, deltaZ_); }
 
 }  // namespace util
 

@@ -1,7 +1,7 @@
 ﻿#include "../includes/Cloth.h"
 #include <iostream> // for debugging
 
-Cloth::Cloth(int x_size, int y_size): cols(x_size), rows(y_size), k1(500), k2(200), k3(50), damping_c(10) {
+Cloth::Cloth(int x_size, int y_size, const glm::vec3& pos): cols(x_size), rows(y_size), k1(500), k2(200), k3(20), damping_c(10), position(pos) {
 	// Create buffers
 	glGenBuffers(1, &VBO);		// Vertex Buffer Object
 	glGenVertexArrays(1, &VAO);	// Vertex Array Object
@@ -38,7 +38,7 @@ void Cloth::createVertexData() {
 	for (int r = 0; r < rows; r++) {
 		for (int c = 0; c < cols; c++) {
 			
-			nodes.push_back(glm::vec3((float)c/cols, (float)r/rows, 0));
+			nodes.push_back(glm::vec3((float)c/cols+position.x, (float)r/rows+position.y, position.z));
 			Node& n = nodes.back();
 			vertices.push_back(n.pos.x);
 			vertices.push_back(n.pos.y);
@@ -229,5 +229,22 @@ void Cloth::updateVertexData() {
 		vertices.push_back(nodes[i].pos.x);
 		vertices.push_back(nodes[i].pos.y);
 		vertices.push_back(nodes[i].pos.z);
+	}
+}
+
+// Sets the minimum node distance to SpherePos = sphereRadius
+void Cloth::handleSphereIntersections(float sphereRadius, const glm::vec3& spherePos) {
+	for (Node& n : nodes) {
+		glm::vec3 nodeToSphere = n.pos - spherePos;
+		float distToSphere = glm::length(nodeToSphere);
+		if (distToSphere < sphereRadius) {
+			// Set node position to the border of the sphere
+			glm::vec3 sphereBorder = nodeToSphere / distToSphere * sphereRadius;
+			n.pos = spherePos + sphereBorder;
+			// Update velocity
+			//n.vel = -n.vel;
+			// Reflection of ingoing velocity
+			n.vel = ( - n.vel + (glm::dot(-n.vel, glm::normalize(nodeToSphere)) - n.vel) * 2.0f)*0.1f;
+		}
 	}
 }

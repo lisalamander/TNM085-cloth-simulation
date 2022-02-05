@@ -7,7 +7,7 @@
  * This code is in the public domain.
  */
 #pragma once
-
+#include <glm/glm.hpp>
 struct GLFWwindow;
 
 namespace util {
@@ -50,7 +50,7 @@ public:
 
     double phi() const;
     double theta() const;
-
+    glm::vec3 delta() const;
 private:
     GLFWwindow* window_;
 
@@ -59,8 +59,12 @@ private:
 
     double lastX_;
     double lastY_;
+    
     bool leftPressed_;
     bool rightPressed_;
+    double deltaX_;
+    double deltaY_;
+    double deltaZ_;
 };
 
 

@@ -20,7 +20,7 @@
 const int SCR_WIDTH = 1920/2;
 const int SCR_HEIGHT = 1080/2;
 const float M_PI = 3.1415927;
-
+const float sphereRadius = 0.5f;
 void processInput(GLFWwindow* window);
 glm::mat4 mat4rotx(float angle);
 glm::mat4 mat4roty(float angle);
@@ -66,10 +66,10 @@ int main() {
  
     // Create sphere object
     TriangleSoup sphere;
-    sphere.createSphere(0.5, 30);
+    sphere.createSphere(sphereRadius, 30);
+    glm::vec3 spherePosition = glm::vec3(0, 0, -10);
+    Cloth myCloth(10, 10, glm::vec3(0, 0, -5));
     
-    Cloth myCloth(10, 10);
-
     // Stuff for cameramovement
 
     util::KeyRotator myKeyRotator(window);
@@ -100,14 +100,17 @@ int main() {
         cameraMove = mat4rotz(myKeyRotator.theta()) * mat4roty(myKeyRotator.phi());
         
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0, 0, -10.0f));
+        glm::vec3 mouseDelta = glm::vec3(myMouseRotator.delta()/100.0f);
+        spherePosition += mouseDelta;
+        model = glm::translate(model, glm::vec3(spherePosition.x, spherePosition.y, spherePosition.z));
         myShader.use();
         myShader.setMat4("model", model);
         myShader.setMat4("view", cameraMove);
         myCloth.updateSimulation(0.01);
+        myCloth.handleSphereIntersections(sphereRadius, spherePosition);
         sphere.render();
         model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0, 0, -5.0f));
+        //model = glm::translate(model, glm::vec3(myCloth.getPos()));
         myShader.use();
         myShader.setMat4("model", model);
 
