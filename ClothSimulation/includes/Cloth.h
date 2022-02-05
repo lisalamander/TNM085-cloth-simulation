@@ -21,7 +21,7 @@ private:
 	std::vector<unsigned int> indicies;
 
 	int rows, cols;
-	const float k1, k2, damping_c;
+	const float k1, k2, k3, damping_c;
 	unsigned int VBO, EAO, VAO;
 
 };

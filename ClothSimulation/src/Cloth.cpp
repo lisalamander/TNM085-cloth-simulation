@@ -1,7 +1,7 @@
 ﻿#include "../includes/Cloth.h"
 #include <iostream> // for debugging
 
-Cloth::Cloth(int x_size, int y_size): cols(x_size), rows(y_size), k1(500), k2(200), damping_c(10) {
+Cloth::Cloth(int x_size, int y_size): cols(x_size), rows(y_size), k1(500), k2(200), k3(50), damping_c(10) {
 	// Create buffers
 	glGenBuffers(1, &VBO);		// Vertex Buffer Object
 	glGenVertexArrays(1, &VAO);	// Vertex Array Object
@@ -110,10 +110,11 @@ void Cloth::updateSimulation(float time_step) {
 			int downNeighbour = IX(c, down);
 
 			nodes[thisNodesIndex].force = glm::vec3(0, 0, 0);
-			std::vector<glm::vec3> forces(8, glm::vec3(0, 0, 0));
+			std::vector<glm::vec3> forces(12, glm::vec3(0, 0, 0));
 			glm::vec3 gravitationalForce = glm::vec3(0, -9.82, 0)* nodes[thisNodesIndex].mass;
 			const float L1 = (1.0f / cols);			// TODO: move to outside function
 			const float L2 = sqrt(2 * pow(L1, 2));
+			const float L3 = L1 * 2;
 
 			// down left 
 			if (left >= 0 && down >= 0) {
@@ -127,6 +128,11 @@ void Cloth::updateSimulation(float time_step) {
 				glm::vec3 X = nodes[thisNodesIndex].pos - nodes[leftNeighbour].pos;
 				float X_magn = glm::length(X);
 				forces[1] += -k1 * (X_magn - L1) * X / X_magn;
+				if (left - 1 >= 0) {
+					glm::vec3 X = nodes[thisNodesIndex].pos - nodes[leftNeighbour-1].pos;
+					float X_magn = glm::length(X);
+					forces[8] += -k3 * (X_magn - L3) * X / X_magn;
+				}
 			}
 
 			// up left 
@@ -141,6 +147,11 @@ void Cloth::updateSimulation(float time_step) {
 				glm::vec3 X = nodes[thisNodesIndex].pos - nodes[upNeighbour].pos;
 				float X_magn = glm::length(X);
 				forces[3] += -k1 * (X_magn - L1) * X / X_magn;
+				if (up + 1  < rows) {
+					glm::vec3 X = nodes[thisNodesIndex].pos - nodes[upNeighbour + cols].pos;
+					float X_magn = glm::length(X);
+					forces[9] += -k3 * (X_magn - L3) * X / X_magn;
+				}
 			}
 
 			// up right 
@@ -154,6 +165,11 @@ void Cloth::updateSimulation(float time_step) {
 				glm::vec3 X = nodes[thisNodesIndex].pos - nodes[rightNeighbour].pos;
 				float X_magn = glm::length(X);
 				forces[5] += -k1 * (X_magn - L1) * X / X_magn;
+				if (right + 1 < cols) {
+					glm::vec3 X = nodes[thisNodesIndex].pos - nodes[rightNeighbour + 1].pos;
+					float X_magn = glm::length(X);
+					forces[10] += -k3 * (X_magn - L3) * X / X_magn;
+				}
 			}
 			
 			// down right 
@@ -167,6 +183,11 @@ void Cloth::updateSimulation(float time_step) {
 				glm::vec3 X = nodes[thisNodesIndex].pos - nodes[downNeighbour].pos;
 				float X_magn = glm::length(X);
 				forces[7] += -k1 * (X_magn - L1) * X / X_magn;
+				if (down - 1 >= 0) {
+					glm::vec3 X = nodes[thisNodesIndex].pos - nodes[downNeighbour - cols].pos;
+					float X_magn = glm::length(X);
+					forces[11] += -k3 * (X_magn - L3) * X / X_magn;
+				}
 			}
 			glm::vec3 dampingForce = -nodes[thisNodesIndex].vel * damping_c;
 
