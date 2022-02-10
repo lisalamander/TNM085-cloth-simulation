@@ -1,11 +1,12 @@
 ﻿#include "../includes/Cloth.h"
 #include <iostream> // for debugging
 
-Cloth::Cloth(int x_size, int y_size, const glm::vec3& pos): cols(x_size), rows(y_size), k1(500), k2(200), k3(20), damping_c(10), position(pos) {
+Cloth::Cloth(int x_size, int y_size, const glm::vec3& pos): cols(x_size), rows(y_size), k1(500), k2(200), k3(20), damping_c(50), position(pos) {
 	// Create buffers
 	glGenBuffers(1, &VBO);		// Vertex Buffer Object
 	glGenVertexArrays(1, &VAO);	// Vertex Array Object
 	glGenBuffers(1, &EAO);		// Element Array Object
+	glGenBuffers(1, &TBO);		// Texture Buffer Object
 	// Set vertex data
 	createVertexData();
 	// Send vertex data to GPU
@@ -14,8 +15,10 @@ Cloth::Cloth(int x_size, int y_size, const glm::vec3& pos): cols(x_size), rows(y
 	createIndexData();
 	// Send index data to GPU
 	sendIndexData();
-	
-
+	// Set texture data
+	createTextureData();
+	// Send texture data to GPU
+	sendTextureData();
 }
 
 Cloth::~Cloth() {
@@ -23,7 +26,9 @@ Cloth::~Cloth() {
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glDeleteBuffers(1, &VBO);
 	glDeleteBuffers(1, &EAO);
+	glDeleteBuffers(1, &TBO);
 	glDeleteVertexArrays(1, &VAO);
+
 }
 
 
@@ -84,6 +89,18 @@ void Cloth::createIndexData() {
 	}*/
 }
 
+void Cloth::createNormalData() {
+
+}
+
+void Cloth::createTextureData() {
+	for (int r = 0; r < rows; r++) {
+		for (int c = 0; c < cols; c++) {
+			texCoords.push_back(c / (float)cols);
+			texCoords.push_back(r / (float)rows);
+		}
+	}
+}
 
 void Cloth::updateSimulation(float time_step) {
 	// clear vector data
@@ -222,6 +239,13 @@ void Cloth::sendIndexData() {
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indicies.size(), indicies.data(), GL_STATIC_DRAW);
 }
 
+void Cloth::sendTextureData() {
+	glBindBuffer(GL_ARRAY_BUFFER, TBO);
+	glVertexAttribPointer(2, 2, GL_FLOAT, false, 2 * sizeof(GL_FLOAT), (void*)0);
+	glEnableVertexAttribArray(2);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(GL_FLOAT) * texCoords.size(), texCoords.data(), GL_STATIC_DRAW);
+}
+
 
 void Cloth::updateVertexData() {
 	vertices.clear();
@@ -244,7 +268,7 @@ void Cloth::handleSphereIntersections(float sphereRadius, const glm::vec3& spher
 			// Update velocity
 			//n.vel = -n.vel;
 			// Reflection of ingoing velocity
-			n.vel = ( - n.vel + (glm::dot(-n.vel, glm::normalize(nodeToSphere)) - n.vel) * 2.0f)*0.1f;
+			n.vel = (-n.vel + (glm::dot(-n.vel, glm::normalize(nodeToSphere))* glm::normalize(nodeToSphere) - n.vel) * 2.0f)*0.25f;
 		}
 	}
 }

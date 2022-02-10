@@ -1,7 +1,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <stb_image.h>
-
+#include "includes/Texture.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -55,10 +55,12 @@ int main() {
     int nrAttributes;
     glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nrAttributes);
     std::cout << "Maximum nr of vertex attributes supported: " << nrAttributes << std::endl;
-  // Create shader
+    // Create shader
     Shader myShader("shaders/vertex.glsl", "shaders/fragment.glsl");
     myShader.use();
 
+
+    // Projection matrix
     glm::mat4 projection = glm::perspective(M_PI / 4.0f, (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 500.0f);
 
 
@@ -77,6 +79,13 @@ int main() {
     glm::mat4 cameraMove = glm::mat4(0.0f);
 
     
+    // Texture settings
+    Texture texture("images/cloth_texture.png");
+    myShader.setInt("texture", 0);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture.getID());
+
+
 
     while (!glfwWindowShouldClose(window))
     {
@@ -94,7 +103,7 @@ int main() {
         glEnable(GL_DEPTH_TEST);
         glClearColor(0.5f, 0.5f, 1.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glEnable(GL_CULL_FACE);
+        //glEnable(GL_CULL_FACE);
 
         //Camera
         cameraMove = mat4rotz(myKeyRotator.theta()) * mat4roty(myKeyRotator.phi());

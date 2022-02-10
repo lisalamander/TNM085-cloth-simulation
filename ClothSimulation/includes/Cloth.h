@@ -18,15 +18,20 @@ private:
 	void createVertexData();
 	void updateVertexData();
 	void createIndexData();
+	void createNormalData();
+	void createTextureData();
 	void sendVertexData();
 	void sendIndexData();
+	void sendTextureData();
 	std::vector<Node> nodes;
 	std::vector<float> vertices;
+	std::vector<float> normals;
+	std::vector<float> texCoords;
 	std::vector<unsigned int> indicies;
 	glm::vec3 position;
 
 	int rows, cols;
 	const float k1, k2, k3, damping_c;
-	unsigned int VBO, EAO, VAO;
+	unsigned int VBO, EAO, VAO, TBO;
 
 };
