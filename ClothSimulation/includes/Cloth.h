@@ -31,6 +31,7 @@ private:
 	std::vector<float> texCoords;
 	std::vector<unsigned int> indicies;
 	glm::vec3 position;
+	
 
 	int rows, cols;
 	const float k1, k2, k3, damping_c;

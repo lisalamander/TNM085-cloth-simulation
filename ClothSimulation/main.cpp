@@ -5,10 +5,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-
 #include "includes/Utilities.hpp"
 #include "includes/Shader.h"
-
 #include "includes/TriangleSoup.hpp"
 #include "includes/Cloth.h"
 #include <iostream>
@@ -89,8 +87,7 @@ int main() {
     myShader.setInt("texture", 0);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture.getID());
-
-
+    
 
     while (!glfwWindowShouldClose(window))
     {

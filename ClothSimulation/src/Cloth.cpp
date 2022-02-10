@@ -106,27 +106,32 @@ void Cloth::createNormalData() {
 				int downNeighbourIndex = IX(c, r - 1);
 
 				glm::vec3 normal;
-
+				// For all nodes, except last row and last column
 				if (c < cols - 1 && r < rows - 1) {
+					// Normal for first triangle
 					glm::vec3 v1 = nodes[rightNeighbourIndex].pos - nodes[thisNodeIndex].pos;
 					glm::vec3 v2 = nodes[upRightNeighbourIndex].pos - nodes[rightNeighbourIndex].pos;
 					glm::vec3 normal1 = glm::normalize(glm::cross(v1, v2));
-					
+					// Normal for second triangle
 					glm::vec3 v3 = nodes[thisNodeIndex].pos - nodes[upRightNeighbourIndex].pos;
 					glm::vec3 v4 = nodes[upRightNeighbourIndex].pos - nodes[upNeighbourIndex].pos;
 					glm::vec3 normal2 = glm::normalize(glm::cross(v3, v4));
-			
+					// Mean normal
 					normal = glm::normalize((normal1 + normal2) / 2.0f);
 					
 				}
+				// For last row
 				else if (c < cols - 1) {
+					// Use normal for second triangle of last row
 					glm::vec3 v1 = nodes[downNeighbourIndex].pos - nodes[rightNeighbourIndex].pos;
 					glm::vec3 v2 = nodes[rightNeighbourIndex].pos - nodes[thisNodeIndex].pos;
 					glm::vec3 normal = glm::normalize(glm::cross(v1, v2));
 					
 					
 				}
+				// For last column
 				else {
+					// Use normal for last vertex
 					glm::vec3 normal = glm::vec3(normals.size() - 3, normals[normals.size() - 2], normals[normals.back()]);
 				}
 				normals.push_back(normal.x);
@@ -265,6 +270,8 @@ void Cloth::updateSimulation(float time_step) {
 			nodes[thisNodesIndex].acc = (1 / nodes[thisNodesIndex].mass) * nodes[thisNodesIndex].force;
 			// numerical method
 			nodes[thisNodesIndex].Euler(time_step);
+			//nodes[thisNodesIndex].Verlet(time_step);
+			
 		}
 	}
 	
