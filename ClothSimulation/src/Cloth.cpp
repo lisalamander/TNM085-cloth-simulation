@@ -259,6 +259,8 @@ void Cloth::updateVertexData() {
 // Sets the minimum node distance to SpherePos = sphereRadius
 void Cloth::handleSphereIntersections(float sphereRadius, const glm::vec3& spherePos) {
 	for (Node& n : nodes) {
+		if (n.isFixed)
+			continue;
 		glm::vec3 nodeToSphere = n.pos - spherePos;
 		float distToSphere = glm::length(nodeToSphere);
 		if (distToSphere < sphereRadius) {
