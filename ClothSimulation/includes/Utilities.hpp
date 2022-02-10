@@ -31,6 +31,8 @@ public:
 
     void poll();
 
+    glm::vec3 move() const;
+
     double phi() const;
     double theta() const;
 
@@ -51,6 +53,8 @@ public:
     double phi() const;
     double theta() const;
     glm::vec3 delta() const;
+    
+   
 private:
     GLFWwindow* window_;
 
