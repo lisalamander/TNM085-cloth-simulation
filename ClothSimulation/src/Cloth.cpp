@@ -298,14 +298,15 @@ void Cloth::updateVertexData() {
 
 // Sets the minimum node distance to SpherePos = sphereRadius
 void Cloth::handleSphereIntersections(float sphereRadius, const glm::vec3& spherePos) {
+	float threshold = 0.0f;
 	for (Node& n : nodes) {
 		if (n.isFixed)
 			continue;
 		glm::vec3 nodeToSphere = n.pos - spherePos;
 		float distToSphere = glm::length(nodeToSphere);
-		if (distToSphere < sphereRadius) {
+		if (distToSphere < sphereRadius+threshold) {
 			// Set node position to the border of the sphere
-			glm::vec3 sphereBorder = nodeToSphere / distToSphere * sphereRadius;
+			glm::vec3 sphereBorder = nodeToSphere / distToSphere * (sphereRadius+threshold);
 			n.pos = spherePos + sphereBorder;
 			// Update velocity
 			//n.vel = -n.vel;

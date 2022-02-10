@@ -151,7 +151,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\fragment.glsl" />
+    <None Include="shaders\fragment_sphere.glsl" />
     <None Include="shaders\vertex.glsl" />
+    <None Include="shaders\vertex_sphere.glsl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />

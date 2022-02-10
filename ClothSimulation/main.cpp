@@ -59,15 +59,17 @@ int main() {
     std::cout << "Maximum nr of vertex attributes supported: " << nrAttributes << std::endl;
     // Create shader
     Shader myShader("shaders/vertex.glsl", "shaders/fragment.glsl");
-    myShader.use();
-
+   
+    Shader sphereShader("shaders/vertex_sphere.glsl", "shaders/fragment_sphere.glsl");
 
     // Projection matrix
     glm::mat4 projection = glm::perspective(M_PI / 4.0f, (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 500.0f);
 
-
+    myShader.use();
     myShader.setMat4("projection", projection);
- 
+    sphereShader.use();
+    sphereShader.setMat4("projection", projection);
+
     // Create sphere object
     TriangleSoup sphere;
     sphere.createSphere(sphereRadius, 30);
@@ -116,9 +118,9 @@ int main() {
         spherePosition += mouseDelta;
         model = glm::translate(model, glm::vec3(spherePosition.x, spherePosition.y, spherePosition.z));
 
-        myShader.use();
-        myShader.setMat4("model", model);
-        myShader.setMat4("view", cameraMove);
+        sphereShader.use();
+        sphereShader.setMat4("model", model);
+        sphereShader.setMat4("view", cameraMove);
         myCloth.updateSimulation(0.01);
         myCloth.handleSphereIntersections(sphereRadius, spherePosition);
         sphere.render();
@@ -126,7 +128,7 @@ int main() {
         //model = glm::translate(model, glm::vec3(myCloth.getPos()));
         myShader.use();
         myShader.setMat4("model", model);
-
+        myShader.setMat4("view", cameraMove);
         myCloth.render();
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
