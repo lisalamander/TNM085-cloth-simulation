@@ -7,6 +7,7 @@ Cloth::Cloth(int x_size, int y_size, const glm::vec3& pos): cols(x_size), rows(y
 	glGenVertexArrays(1, &VAO);	// Vertex Array Object
 	glGenBuffers(1, &EAO);		// Element Array Object
 	glGenBuffers(1, &TBO);		// Texture Buffer Object
+	glGenBuffers(1, &NBO);		// Normal Buffer Object
 	// Set vertex data
 	createVertexData();
 	// Send vertex data to GPU
@@ -19,6 +20,10 @@ Cloth::Cloth(int x_size, int y_size, const glm::vec3& pos): cols(x_size), rows(y
 	createTextureData();
 	// Send texture data to GPU
 	sendTextureData();
+	// Set normal data
+	createNormalData();
+	// Send normal data to GPU
+	sendNormalData();
 }
 
 Cloth::~Cloth() {
@@ -27,6 +32,7 @@ Cloth::~Cloth() {
 	glDeleteBuffers(1, &VBO);
 	glDeleteBuffers(1, &EAO);
 	glDeleteBuffers(1, &TBO);
+	glDeleteBuffers(1, &NBO);
 	glDeleteVertexArrays(1, &VAO);
 
 }
@@ -90,8 +96,35 @@ void Cloth::createIndexData() {
 }
 
 void Cloth::createNormalData() {
+	for (int r = 0; r < rows; r++) {
+		for (int c = 0; c < cols; c++) {
+			if (c < cols - 1 && r < rows - 1) {
+				int thisNodeIndex = IX(c, r);
+				int rightNeighbourIndex = IX(c + 1, r);
+				int upRightNeighbourIndex = IX(c + 1, r + 1);
+				int upNeighbourIndex = IX(c, r + 1);
+				glm::vec3 v1 = nodes[rightNeighbourIndex].pos - nodes[thisNodeIndex].pos;
+				glm::vec3 v2 = nodes[upRightNeighbourIndex].pos - nodes[rightNeighbourIndex].pos;
+				glm::vec3 normal = glm::normalize(glm::cross(v1, v2));
 
+				normals.push_back(normal.x);
+				normals.push_back(normal.y);
+				normals.push_back(normal.z);
+
+				v1 = nodes[thisNodeIndex].pos - nodes[upNeighbourIndex].pos;
+				v2 = nodes[upRightNeighbourIndex].pos - nodes[upNeighbourIndex].pos;
+				normal = glm::normalize(glm::cross(v1, v2));
+
+				normals.push_back(normal.x);
+				normals.push_back(normal.y);
+				normals.push_back(normal.z);
+			}
+
+
+		}
+	}
 }
+
 
 void Cloth::createTextureData() {
 	for (int r = 0; r < rows; r++) {
@@ -240,12 +273,19 @@ void Cloth::sendIndexData() {
 }
 
 void Cloth::sendTextureData() {
+	glBindVertexArray(VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, TBO);
 	glVertexAttribPointer(2, 2, GL_FLOAT, false, 2 * sizeof(GL_FLOAT), (void*)0);
 	glEnableVertexAttribArray(2);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(GL_FLOAT) * texCoords.size(), texCoords.data(), GL_STATIC_DRAW);
 }
-
+void Cloth::sendNormalData() {
+	glBindVertexArray(VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, NBO);
+	glVertexAttribPointer(1, 3, GL_FLOAT, false, 3 * sizeof(GL_FLOAT), (void*)0);
+	glEnableVertexAttribArray(1);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(GL_FLOAT) * normals.size(), normals.data(), GL_STATIC_DRAW);
+}
 
 void Cloth::updateVertexData() {
 	vertices.clear();

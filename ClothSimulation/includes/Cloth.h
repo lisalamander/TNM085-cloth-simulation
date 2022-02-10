@@ -23,6 +23,7 @@ private:
 	void sendVertexData();
 	void sendIndexData();
 	void sendTextureData();
+	void sendNormalData();
 	std::vector<Node> nodes;
 	std::vector<float> vertices;
 	std::vector<float> normals;
@@ -32,6 +33,6 @@ private:
 
 	int rows, cols;
 	const float k1, k2, k3, damping_c;
-	unsigned int VBO, EAO, VAO, TBO;
+	unsigned int VBO, EAO, VAO, TBO, NBO;
 
 };
