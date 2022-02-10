@@ -76,7 +76,7 @@ int main() {
 
     util::KeyRotator myKeyRotator(window);
     util::MouseRotator myMouseRotator(window);
-    glm::mat4 cameraMove = glm::mat4(0.0f);
+    glm::mat4 cameraMove = glm::mat4(1.0f);
     glm::vec3 cameraPosition = glm::vec3(0,0,0);
 
     
@@ -91,7 +91,7 @@ int main() {
 
         //Get input
         myMouseRotator.poll();
-        cameraPosition +=  myKeyRotator.move();
+        cameraPosition =  myKeyRotator.move();
 
         glEnable(GL_DEPTH_TEST);
         glClearColor(0.5f, 0.5f, 1.0f, 1.0f);
@@ -99,7 +99,7 @@ int main() {
         glEnable(GL_CULL_FACE);
 
         //Camera
-        cameraMove = mat4rotz(myKeyRotator.theta()) * mat4roty(myKeyRotator.phi());
+        
         cameraMove = glm::translate(cameraMove, glm::vec3(cameraPosition.x,cameraPosition.y,cameraPosition.z));
 
         glm::mat4 model = glm::mat4(1.0f);
