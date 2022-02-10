@@ -9,6 +9,7 @@ public:
 	~Cloth();
 	void render();
 	void updateSimulation(float time_step);
+	void updateBuffers();
 	void handleSphereIntersections(float radius, const glm::vec3& position);
 	glm::vec3 getPos() const {	return position;} 
 	

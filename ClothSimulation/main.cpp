@@ -123,6 +123,7 @@ int main() {
         sphereShader.setMat4("view", cameraMove);
         myCloth.updateSimulation(0.01);
         myCloth.handleSphereIntersections(sphereRadius, spherePosition);
+        myCloth.updateBuffers();
         sphere.render();
         model = glm::mat4(1.0f);
         //model = glm::translate(model, glm::vec3(myCloth.getPos()));

@@ -98,31 +98,46 @@ void Cloth::createIndexData() {
 void Cloth::createNormalData() {
 	for (int r = 0; r < rows; r++) {
 		for (int c = 0; c < cols; c++) {
-			if (c < cols - 1 && r < rows - 1) {
+			
 				int thisNodeIndex = IX(c, r);
 				int rightNeighbourIndex = IX(c + 1, r);
 				int upRightNeighbourIndex = IX(c + 1, r + 1);
 				int upNeighbourIndex = IX(c, r + 1);
-				glm::vec3 v1 = nodes[rightNeighbourIndex].pos - nodes[thisNodeIndex].pos;
-				glm::vec3 v2 = nodes[upRightNeighbourIndex].pos - nodes[rightNeighbourIndex].pos;
-				glm::vec3 normal = glm::normalize(glm::cross(v1, v2));
+				int downNeighbourIndex = IX(c, r - 1);
 
+				glm::vec3 normal;
+
+				if (c < cols - 1 && r < rows - 1) {
+					glm::vec3 v1 = nodes[rightNeighbourIndex].pos - nodes[thisNodeIndex].pos;
+					glm::vec3 v2 = nodes[upRightNeighbourIndex].pos - nodes[rightNeighbourIndex].pos;
+					glm::vec3 normal1 = glm::normalize(glm::cross(v1, v2));
+					
+					glm::vec3 v3 = nodes[thisNodeIndex].pos - nodes[upRightNeighbourIndex].pos;
+					glm::vec3 v4 = nodes[upRightNeighbourIndex].pos - nodes[upNeighbourIndex].pos;
+					glm::vec3 normal2 = glm::normalize(glm::cross(v3, v4));
+			
+					normal = glm::normalize((normal1 + normal2) / 2.0f);
+					
+				}
+				else if (c < cols - 1) {
+					glm::vec3 v1 = nodes[downNeighbourIndex].pos - nodes[rightNeighbourIndex].pos;
+					glm::vec3 v2 = nodes[rightNeighbourIndex].pos - nodes[thisNodeIndex].pos;
+					glm::vec3 normal = glm::normalize(glm::cross(v1, v2));
+					
+					
+				}
+				else {
+					glm::vec3 normal = glm::vec3(normals.size() - 3, normals[normals.size() - 2], normals[normals.back()]);
+				}
 				normals.push_back(normal.x);
 				normals.push_back(normal.y);
 				normals.push_back(normal.z);
-
-				v1 = nodes[thisNodeIndex].pos - nodes[upNeighbourIndex].pos;
-				v2 = nodes[upRightNeighbourIndex].pos - nodes[upNeighbourIndex].pos;
-				normal = glm::normalize(glm::cross(v1, v2));
-
-				normals.push_back(normal.x);
-				normals.push_back(normal.y);
-				normals.push_back(normal.z);
-			}
+			
 
 
 		}
 	}
+	//std::cout << "Generated " << normals.size()/3 << " normals.\n";
 }
 
 
@@ -139,6 +154,7 @@ void Cloth::updateSimulation(float time_step) {
 	// clear vector data
 	vertices.clear();
 	indicies.clear();
+	normals.clear();
 	// calculate forces
 	for (int r = 0; r < rows; r++) {
 		for (int c = 0; c < cols; c++) {
@@ -251,10 +267,16 @@ void Cloth::updateSimulation(float time_step) {
 			nodes[thisNodesIndex].Euler(time_step);
 		}
 	}
+	
+}
+
+void Cloth::updateBuffers() {
 	updateVertexData();
 	createIndexData();
+	createNormalData();
 	sendVertexData();
 	sendIndexData();
+	sendNormalData();
 }
 
 void Cloth::sendVertexData() {
@@ -298,7 +320,7 @@ void Cloth::updateVertexData() {
 
 // Sets the minimum node distance to SpherePos = sphereRadius
 void Cloth::handleSphereIntersections(float sphereRadius, const glm::vec3& spherePos) {
-	float threshold = 0.0f;
+	float threshold = 0.025f;
 	for (Node& n : nodes) {
 		if (n.isFixed)
 			continue;
