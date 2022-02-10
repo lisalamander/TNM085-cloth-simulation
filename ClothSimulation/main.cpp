@@ -22,9 +22,11 @@ const int SCR_HEIGHT = 1080/2;
 const float M_PI = 3.1415927;
 const float sphereRadius = 0.5f;
 void processInput(GLFWwindow* window);
+
 glm::mat4 mat4rotx(float angle);
 glm::mat4 mat4roty(float angle);
 glm::mat4 mat4rotz(float angle);
+
 
 int main() {
     // Initialize glfw
@@ -75,6 +77,7 @@ int main() {
     util::KeyRotator myKeyRotator(window);
     util::MouseRotator myMouseRotator(window);
     glm::mat4 cameraMove = glm::mat4(0.0f);
+    glm::vec3 cameraPosition = glm::vec3(0,0,0);
 
     
 
@@ -87,9 +90,8 @@ int main() {
         // rendering commands
 
         //Get input
-        myKeyRotator.poll();
         myMouseRotator.poll();
-
+        cameraPosition +=  myKeyRotator.move();
 
         glEnable(GL_DEPTH_TEST);
         glClearColor(0.5f, 0.5f, 1.0f, 1.0f);
@@ -98,11 +100,13 @@ int main() {
 
         //Camera
         cameraMove = mat4rotz(myKeyRotator.theta()) * mat4roty(myKeyRotator.phi());
-        
+        cameraMove = glm::translate(cameraMove, glm::vec3(cameraPosition.x,cameraPosition.y,cameraPosition.z));
+
         glm::mat4 model = glm::mat4(1.0f);
         glm::vec3 mouseDelta = glm::vec3(myMouseRotator.delta()/100.0f);
         spherePosition += mouseDelta;
         model = glm::translate(model, glm::vec3(spherePosition.x, spherePosition.y, spherePosition.z));
+
         myShader.use();
         myShader.setMat4("model", model);
         myShader.setMat4("view", cameraMove);
@@ -174,3 +178,4 @@ glm::mat4 mat4rotz(float angle) {
 
     return rotateZ;
 }
+
