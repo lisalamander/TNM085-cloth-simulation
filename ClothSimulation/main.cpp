@@ -84,7 +84,7 @@ int main() {
     
     // Texture settings
     Texture texture("images/cloth_texture.png");
-    myShader.setInt("texture", 0);
+    myShader.setInt("texture_", 0);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture.getID());
     

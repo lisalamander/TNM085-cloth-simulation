@@ -4,11 +4,11 @@ in vec3 Normal;
 in vec3 FragPos;
 in vec2 TexCoords;
 
-uniform sampler2D texture;
+uniform sampler2D texture_;
 
 void main()
 {
-         vec4 tex = texture(texture, TexCoords);
+        vec4 tex = texture(texture_, TexCoords);
         vec3 lightDir = vec3(100.0, 100.0, 100.0);
         vec3 L = normalize(lightDir - FragPos);
         float dotNL = max(dot(Normal, L), 0);

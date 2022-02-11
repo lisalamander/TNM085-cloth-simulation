@@ -88,8 +88,10 @@ namespace util {
 
     glm::vec3 KeyRotator::move() const
     {
-        glm::vec3 input = glm::vec3(0.0f);
+        
         float moveSpeed = 0.5f;
+        glm::vec3 input = glm::vec3(0.0f);
+        
 
         if (glfwGetKey(window_, GLFW_KEY_RIGHT)) {
             input.x -= moveSpeed;
@@ -112,12 +114,12 @@ namespace util {
 
         if (glfwGetKey(window_, GLFW_KEY_SPACE)) {
 
-            input.y -= moveSpeed;
+            input.y -= moveSpeed/2;
         }
 
         if (glfwGetKey(window_, GLFW_KEY_LEFT_ALT)) {
 
-            input.y += moveSpeed;
+            input.y += moveSpeed/2;
         }
 
 
@@ -141,6 +143,7 @@ namespace util {
 
         bool currentLeft = glfwGetMouseButton(window_, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
         bool currentRight = glfwGetMouseButton(window_, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS;
+        
 
         if (currentLeft && leftPressed_) {  // If a left button drag is in progress
             int windowWidth;
@@ -170,6 +173,8 @@ namespace util {
         if (currentRight && rightPressed_) {
             deltaZ_ = currentX - lastX_;
         }
+
+        
         leftPressed_ = currentLeft;
         rightPressed_ = currentRight;
         lastX_ = currentX;
