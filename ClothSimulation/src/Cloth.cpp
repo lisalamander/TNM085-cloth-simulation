@@ -1,7 +1,7 @@
 ﻿#include "../includes/Cloth.h"
 #include <iostream> // for debugging
 
-Cloth::Cloth(int x_size, int y_size, const glm::vec3& pos): cols(x_size), rows(y_size), k1(500), k2(200), k3(20), damping_c(50), position(pos) {
+Cloth::Cloth(int x_size, int y_size, const glm::vec3& pos): cols(x_size), rows(y_size), k1(2000), k2(5000), k3(200), damping_c(50), position(pos) {
 	// Create buffers
 	glGenBuffers(1, &VBO);		// Vertex Buffer Object
 	glGenVertexArrays(1, &VAO);	// Vertex Array Object
