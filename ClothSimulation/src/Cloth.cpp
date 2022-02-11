@@ -132,7 +132,7 @@ void Cloth::createNormalData() {
 				// For last column
 				else {
 					// Use normal for last vertex
-					glm::vec3 normal = glm::vec3(normals.size() - 3, normals[normals.size() - 2], normals[normals.back()]);
+					glm::vec3 normal = glm::vec3(normals.size() - 3, normals[normals.size() - 2], normals[normals.size() - 1]);
 				}
 				normals.push_back(normal.x);
 				normals.push_back(normal.y);
@@ -163,8 +163,8 @@ void Cloth::updateSimulation(float time_step) {
 	// calculate forces
 	for (int r = 0; r < rows; r++) {
 		for (int c = 0; c < cols; c++) {
-			
 			int thisNodesIndex = IX(c, r);
+			
 			if (nodes[thisNodesIndex].isFixed)
 				continue;
 			int left = c - 1;
@@ -179,14 +179,13 @@ void Cloth::updateSimulation(float time_step) {
 			int rightNeighbour = IX(right, r);
 			int downRightNeighbour = IX(right, down);
 			int downNeighbour = IX(c, down);
-
 			nodes[thisNodesIndex].force = glm::vec3(0, 0, 0);
 			std::vector<glm::vec3> forces(12, glm::vec3(0, 0, 0));
 			glm::vec3 gravitationalForce = glm::vec3(0, -9.82, 0)* nodes[thisNodesIndex].mass;
 			const float L1 = (1.0f / cols);			// TODO: move to outside function
 			const float L2 = sqrt(2 * pow(L1, 2));
 			const float L3 = L1 * 2;
-
+			
 			// down left 
 			if (left >= 0 && down >= 0) {
 				glm::vec3 X = nodes[thisNodesIndex].pos - nodes[downLeftNeighbour].pos;
@@ -200,7 +199,8 @@ void Cloth::updateSimulation(float time_step) {
 				float X_magn = glm::length(X);
 				forces[1] += -k1 * (X_magn - L1) * X / X_magn;
 				if (left - 1 >= 0) {
-					glm::vec3 X = nodes[thisNodesIndex].pos - nodes[leftNeighbour-1].pos;
+					int leftleft = leftNeighbour - 1;
+					glm::vec3 X = nodes[thisNodesIndex].pos - nodes[leftleft].pos;
 					float X_magn = glm::length(X);
 					forces[8] += -k3 * (X_magn - L3) * X / X_magn;
 				}
@@ -219,7 +219,8 @@ void Cloth::updateSimulation(float time_step) {
 				float X_magn = glm::length(X);
 				forces[3] += -k1 * (X_magn - L1) * X / X_magn;
 				if (up + 1  < rows) {
-					glm::vec3 X = nodes[thisNodesIndex].pos - nodes[upNeighbour + cols].pos;
+					int upup = upNeighbour + cols;
+					glm::vec3 X = nodes[thisNodesIndex].pos - nodes[upup].pos;
 					float X_magn = glm::length(X);
 					forces[9] += -k3 * (X_magn - L3) * X / X_magn;
 				}
@@ -237,7 +238,8 @@ void Cloth::updateSimulation(float time_step) {
 				float X_magn = glm::length(X);
 				forces[5] += -k1 * (X_magn - L1) * X / X_magn;
 				if (right + 1 < cols) {
-					glm::vec3 X = nodes[thisNodesIndex].pos - nodes[rightNeighbour + 1].pos;
+					int rightright = rightNeighbour + 1;
+					glm::vec3 X = nodes[thisNodesIndex].pos - nodes[rightright].pos;
 					float X_magn = glm::length(X);
 					forces[10] += -k3 * (X_magn - L3) * X / X_magn;
 				}
@@ -255,7 +257,8 @@ void Cloth::updateSimulation(float time_step) {
 				float X_magn = glm::length(X);
 				forces[7] += -k1 * (X_magn - L1) * X / X_magn;
 				if (down - 1 >= 0) {
-					glm::vec3 X = nodes[thisNodesIndex].pos - nodes[downNeighbour - cols].pos;
+					int downdown = downNeighbour - cols;
+					glm::vec3 X = nodes[thisNodesIndex].pos - nodes[downdown].pos;
 					float X_magn = glm::length(X);
 					forces[11] += -k3 * (X_magn - L3) * X / X_magn;
 				}
@@ -318,10 +321,10 @@ void Cloth::sendNormalData() {
 
 void Cloth::updateVertexData() {
 	vertices.clear();
-	for (int i = 0; i < nodes.size(); i++) {
-		vertices.push_back(nodes[i].pos.x);
-		vertices.push_back(nodes[i].pos.y);
-		vertices.push_back(nodes[i].pos.z);
+	for (const Node& n : nodes) {
+		vertices.push_back(n.pos.x);
+		vertices.push_back(n.pos.y);
+		vertices.push_back(n.pos.z);
 	}
 }
 
@@ -333,9 +336,10 @@ void Cloth::handleSphereIntersections(float sphereRadius, const glm::vec3& spher
 			continue;
 		glm::vec3 nodeToSphere = n.pos - spherePos;
 		float distToSphere = glm::length(nodeToSphere);
+	
 		if (distToSphere < sphereRadius+threshold) {
 			// Set node position to the border of the sphere
-			glm::vec3 sphereBorder = nodeToSphere / distToSphere * (sphereRadius+threshold);
+			glm::vec3 sphereBorder = nodeToSphere / distToSphere * (sphereRadius + threshold);
 			n.pos = spherePos + sphereBorder;
 			// Update velocity
 			//n.vel = -n.vel;
@@ -343,4 +347,5 @@ void Cloth::handleSphereIntersections(float sphereRadius, const glm::vec3& spher
 			n.vel = (-n.vel + (glm::dot(-n.vel, glm::normalize(nodeToSphere))* glm::normalize(nodeToSphere) - n.vel) * 2.0f)*0.25f;
 		}
 	}
+	
 }

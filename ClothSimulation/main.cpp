@@ -27,6 +27,8 @@ glm::mat4 mat4rotz(float angle);
 
 
 int main() {
+    float deltaTime = 0;
+    float lastTime = 0;
     // Initialize glfw
     glfwInit();
     // Tell glfw which version of OpenGL we are using
@@ -71,8 +73,8 @@ int main() {
     // Create sphere object
     TriangleSoup sphere;
     sphere.createSphere(sphereRadius, 30);
-    glm::vec3 spherePosition = glm::vec3(0, 0, -10);
-    Cloth myCloth(15, 15, glm::vec3(0, 0, -5));
+    glm::vec3 spherePosition = glm::vec3(-1.0f, 0.0f, -5.0f);
+    Cloth myCloth(10, 10, glm::vec3(0.0f, 0.0f, -5.0f));
     
     // Stuff for cameramovement
 
@@ -95,6 +97,9 @@ int main() {
         // Keyboard input
         processInput(window);
         
+        // Update time
+        deltaTime = glfwGetTime() - lastTime;
+        lastTime = glfwGetTime();
         // rendering commands
 
         //Get input
@@ -118,8 +123,10 @@ int main() {
         sphereShader.use();
         sphereShader.setMat4("model", model);
         sphereShader.setMat4("view", cameraMove);
+        
         myCloth.updateSimulation(0.005);
         myCloth.handleSphereIntersections(sphereRadius, spherePosition);
+        
         myCloth.updateBuffers();
         sphere.render();
         model = glm::mat4(1.0f);
