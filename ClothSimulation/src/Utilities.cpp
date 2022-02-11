@@ -89,25 +89,37 @@ namespace util {
     glm::vec3 KeyRotator::move() const
     {
         glm::vec3 input = glm::vec3(0.0f);
+        float moveSpeed = 0.5f;
 
         if (glfwGetKey(window_, GLFW_KEY_RIGHT)) {
-            input.x -= 1;
+            input.x -= moveSpeed;
         }
 
         if (glfwGetKey(window_, GLFW_KEY_LEFT)) {
-            input.x += 1;
+            input.x += moveSpeed;
         }
 
         if (glfwGetKey(window_, GLFW_KEY_UP)) {
 
-            input.z += 1;
+            input.z += moveSpeed;
 
         }
 
         if (glfwGetKey(window_, GLFW_KEY_DOWN)) {
 
-            input.z -= 1;
+            input.z -= moveSpeed;
         }
+
+        if (glfwGetKey(window_, GLFW_KEY_SPACE)) {
+
+            input.y -= moveSpeed;
+        }
+
+        if (glfwGetKey(window_, GLFW_KEY_LEFT_ALT)) {
+
+            input.y += moveSpeed;
+        }
+
 
         return input;
     }
