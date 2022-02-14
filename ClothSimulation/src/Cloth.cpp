@@ -1,7 +1,7 @@
 ﻿#include "../includes/Cloth.h"
 #include <iostream> // for debugging
 
-Cloth::Cloth(int x_size, int y_size, const glm::vec3& pos): cols(x_size), rows(y_size), k1(2000), k2(5000), k3(200), damping_c(50), position(pos) {
+Cloth::Cloth(int x_size, int y_size, const glm::vec3& pos): cols(x_size), rows(y_size), k1(2000), k2(2000), k3(3000), damping_c(2), position(pos) {
 	// Create buffers
 	glGenBuffers(1, &VBO);		// Vertex Buffer Object
 	glGenVertexArrays(1, &VAO);	// Vertex Array Object
@@ -48,12 +48,15 @@ void Cloth::render() {
 void Cloth::createVertexData() {
 	for (int r = 0; r < rows; r++) {
 		for (int c = 0; c < cols; c++) {
-			
 			nodes.push_back(glm::vec3((float)c/cols+position.x, (float)r/rows+position.y, position.z));
 			Node& n = nodes.back();
 			vertices.push_back(n.pos.x);
 			vertices.push_back(n.pos.y);
 			vertices.push_back(n.pos.z);
+
+			vertices.push_back(n.lastPos.x);
+			vertices.push_back(n.lastPos.y);
+			vertices.push_back(n.lastPos.z);
 			// Lock upper row
 			if (r == rows - 1 && (c == 0 || c == cols-1))
 				n.isFixed = true;
@@ -271,13 +274,21 @@ void Cloth::updateSimulation(float time_step) {
 			nodes[thisNodesIndex].force += (dampingForce + gravitationalForce);
 			// calculate acceleration
 			nodes[thisNodesIndex].acc = (1 / nodes[thisNodesIndex].mass) * nodes[thisNodesIndex].force;
-			// numerical method
-			nodes[thisNodesIndex].Euler(time_step);
-			//nodes[thisNodesIndex].Verlet(time_step);
-			
 		}
 	}
-	
+
+	for (int r = 0; r < rows; r++) {
+		for (int c = 0; c < cols; c++) {
+			int thisNodesIndex = IX(c, r);
+
+			if (nodes[thisNodesIndex].isFixed)
+				continue;
+			// numerical method
+			//nodes[thisNodesIndex].Euler(time_step);		
+
+			nodes[thisNodesIndex].Verlet(time_step);
+		}
+	}
 }
 
 void Cloth::updateBuffers() {

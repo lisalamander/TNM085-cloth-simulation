@@ -8,6 +8,10 @@ void Node::Euler(float step_size) {
 // @TODO: Implement real verlet integration method
 void Node::Verlet(float step_size) {
 	
-	vel = vel + acc * step_size;
-	pos = pos + vel * step_size + 0.5f * acc * step_size * step_size;
+	newPos = pos + pos - lastPos + (step_size * step_size * acc);
+	lastPos = pos;
+	pos = newPos;
+
+	vel = 1 / (2*step_size) * (pos - lastPos);
+	
 }
