@@ -3,6 +3,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
+#include <stdlib.h>     /* srand, rand */
+#include <time.h>       /* time */
 class Cloth {
 public:
 	Cloth(int x_size, int y_size, const glm::vec3& pos);
@@ -11,6 +13,7 @@ public:
 	void updateSimulation(float time_step);
 	void updateBuffers();
 	void handleSphereIntersections(float radius, const glm::vec3& position);
+	void setConstants(float k1_, float k2_, float k3_, float damping_);
 	glm::vec3 getPos() const {	return position;} 
 	
 private:
@@ -34,7 +37,7 @@ private:
 	
 
 	int rows, cols;
-	const float k1, k2, k3, damping_c;
+	float k1, k2, k3, damping_c;
 	unsigned int VBO, EAO, VAO, TBO, NBO;
 
 };

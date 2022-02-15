@@ -74,7 +74,9 @@ int main() {
     TriangleSoup sphere;
     sphere.createSphere(sphereRadius, 30);
     glm::vec3 spherePosition = glm::vec3(-1.0f, 0.0f, -5.0f);
-    Cloth myCloth(10, 10, glm::vec3(0.0f, 0.0f, -5.0f));
+    Cloth myCloth(15, 15, glm::vec3(0.5f, 0.0f, -5.0f));
+    /*Cloth myCloth2(15, 15, glm::vec3(-0.5f, 0.0f, -5.0f));
+    myCloth2.setConstants(1000, 500, 100, 50);*/
     
     // Stuff for cameramovement
 
@@ -128,6 +130,10 @@ int main() {
         myCloth.handleSphereIntersections(sphereRadius, spherePosition);
         
         myCloth.updateBuffers();
+
+      /*  myCloth2.updateSimulation(0.005);
+        myCloth2.handleSphereIntersections(sphereRadius, spherePosition);
+        myCloth2.updateBuffers();*/
         sphere.render();
         model = glm::mat4(1.0f);
         //model = glm::translate(model, glm::vec3(myCloth.getPos()));
@@ -135,6 +141,7 @@ int main() {
         myShader.setMat4("model", model);
         myShader.setMat4("view", cameraMove);
         myCloth.render();
+        //myCloth2.render();
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
         glfwSwapBuffers(window);

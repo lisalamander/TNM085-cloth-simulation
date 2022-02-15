@@ -24,6 +24,8 @@ Cloth::Cloth(int x_size, int y_size, const glm::vec3& pos): cols(x_size), rows(y
 	createNormalData();
 	// Send normal data to GPU
 	sendNormalData();
+	/* initialize random seed: */
+	srand(time(NULL));
 }
 
 Cloth::~Cloth() {
@@ -188,9 +190,10 @@ void Cloth::updateSimulation(float time_step) {
 			
 			// down left 
 			if (left >= 0 && down >= 0) {
+				
 				glm::vec3 X = nodes[thisNodesIndex].pos - nodes[downLeftNeighbour].pos;
 				float X_magn = glm::length(X);
-				forces[0] += -k2 * (X_magn - L2) * X / X_magn;
+					forces[0] += -k2 * (X_magn - L2) * X / X_magn;
 			}
 
 			// left
@@ -348,4 +351,13 @@ void Cloth::handleSphereIntersections(float sphereRadius, const glm::vec3& spher
 		}
 	}
 	
+}
+
+
+
+void Cloth::setConstants(float k1_, float k2_, float k3_, float damping_) {
+	k1 = k1_;
+	k2 = k2_;
+	k3 = k3_;
+	damping_c = damping_;
 }
