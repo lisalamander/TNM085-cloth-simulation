@@ -10,16 +10,19 @@
 #include "includes/TriangleSoup.hpp"
 #include "includes/Cloth.h"
 #include <iostream>
+
 // #include <math.h>
 
 //Egna 
 #include "includes/Node.h"
+#include "RenderEnviro.h"
 // Initial screen dimensions
 const int SCR_WIDTH = 1920/2;
 const int SCR_HEIGHT = 1080/2;
 const float M_PI = 3.1415927;
 const float sphereRadius = 0.5f;
 void processInput(GLFWwindow* window);
+
 
 glm::mat4 mat4rotx(float angle);
 glm::mat4 mat4roty(float angle);
@@ -76,12 +79,6 @@ int main() {
     glm::vec3 spherePosition = glm::vec3(-1.0f, 0.0f, -5.0f);
 
     Cloth myCloth(50, 50, glm::vec3(0.0f, 0.0f, -5.0f));
-
-    //Create floor
-    TriangleSoup floor;
-    floor.createBox(2, 0.005, 2);
-    glm::vec3 floorPosition = glm::vec3(0.0f, -1.0f, -5.0f);
-
     
     // Stuff for cameramovement
 
@@ -97,6 +94,8 @@ int main() {
    
     Texture floorTex("images/grass.jpg");
     myShader.setInt("texture_", 1);
+
+   
     
 
     while (!glfwWindowShouldClose(window))
@@ -122,32 +121,18 @@ int main() {
         //Camera
         
         cameraMove = glm::translate(cameraMove, glm::vec3(cameraPosition.x,cameraPosition.y,cameraPosition.z));
-
-
-
-        //Floor
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(floorPosition.x, floorPosition.y, floorPosition.z));
-        
-        myShader.use();
-        glActiveTexture(1);
-        glBindTexture(GL_TEXTURE_2D, floorTex.getID());
-        myShader.setMat4("model", model);
-        myShader.setMat4("view", cameraMove);
-        floor.render();
-
-
+       
+                
+        //render Enviro
+        renderEnviroment(myShader, floorTex, cameraMove);
 
         //Sphere
-        model = glm::mat4(1.0f);
+        glm::mat4 model = glm::mat4(1.0f);
         glm::vec3 mouseDelta = glm::vec3(myMouseRotator.delta()/100.0f);
         spherePosition += mouseDelta;
         model = glm::translate(model, glm::vec3(spherePosition.x, spherePosition.y, spherePosition.z));
 
         sphereShader.use();
-        
-       
-
         sphereShader.setMat4("model", model);
         sphereShader.setMat4("view", cameraMove);
         

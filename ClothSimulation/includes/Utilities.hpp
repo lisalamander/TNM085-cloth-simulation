@@ -23,8 +23,6 @@ namespace util {
  */
 double displayFPS(GLFWwindow* window);
 
-
-
 class KeyRotator {
 public:
     KeyRotator(GLFWwindow* window);

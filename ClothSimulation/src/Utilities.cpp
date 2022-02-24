@@ -46,7 +46,7 @@ namespace util {
         return fps;
     }
 
-
+    
     KeyRotator::KeyRotator(GLFWwindow* window)
         : window_(window), phi_(0.0), theta_(0.0), lastTime_(glfwGetTime()) {}
 

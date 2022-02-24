@@ -142,6 +142,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="RenderEnviro.h" />
     <ClInclude Include="includes\Cloth.h" />
     <ClInclude Include="includes\Node.h" />
     <ClInclude Include="includes\Shader.h" />
@@ -157,6 +158,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="RenderEnviro.cpp" />
     <ClCompile Include="src\Cloth.cpp" />
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\imageloader.cpp" />
