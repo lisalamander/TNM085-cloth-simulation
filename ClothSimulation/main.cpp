@@ -77,6 +77,11 @@ int main() {
 
     Cloth myCloth(50, 50, glm::vec3(0.0f, 0.0f, -5.0f));
 
+    //Create floor
+    TriangleSoup floor;
+    floor.createBox(2, 0.005, 2);
+    glm::vec3 floorPosition = glm::vec3(0.0f, -1.0f, -5.0f);
+
     
     // Stuff for cameramovement
 
@@ -88,9 +93,10 @@ int main() {
     
     // Texture settings
     Texture texture("images/cloth_texture.png");
-    myShader.setInt("texture_", 0);
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture.getID());
+    myShader.setInt("texture_", 0);   
+   
+    Texture floorTex("images/grass.jpg");
+    myShader.setInt("texture_", 1);
     
 
     while (!glfwWindowShouldClose(window))
@@ -117,12 +123,31 @@ int main() {
         
         cameraMove = glm::translate(cameraMove, glm::vec3(cameraPosition.x,cameraPosition.y,cameraPosition.z));
 
+
+
+        //Floor
         glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(floorPosition.x, floorPosition.y, floorPosition.z));
+        
+        myShader.use();
+        glActiveTexture(1);
+        glBindTexture(GL_TEXTURE_2D, floorTex.getID());
+        myShader.setMat4("model", model);
+        myShader.setMat4("view", cameraMove);
+        floor.render();
+
+
+
+        //Sphere
+        model = glm::mat4(1.0f);
         glm::vec3 mouseDelta = glm::vec3(myMouseRotator.delta()/100.0f);
         spherePosition += mouseDelta;
         model = glm::translate(model, glm::vec3(spherePosition.x, spherePosition.y, spherePosition.z));
 
         sphereShader.use();
+        
+       
+
         sphereShader.setMat4("model", model);
         sphereShader.setMat4("view", cameraMove);
         
@@ -138,6 +163,8 @@ int main() {
         model = glm::mat4(1.0f);
         //model = glm::translate(model, glm::vec3(myCloth.getPos()));
         myShader.use();
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, texture.getID());
         myShader.setMat4("model", model);
         myShader.setMat4("view", cameraMove);
         myCloth.render();

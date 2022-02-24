@@ -78,8 +78,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>E:\Liu\MT\TNM085\project\TNM085-cloth-simulation\ClothSimulation\dependencies;C:\Users\Karl Wastesson\Documents\TNM085\ClothSimulation\dependencies;C:\Users\niner\source\repos\TNM085-cloth-simulation\ClothSimulation\dependencies;C:\Users\NinjaSputnik\source\repos\TNM085-cloth-simulation\ClothSimulation\dependencies;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Karl Wastesson\Documents\TNM085\ClothSimulation\libs;E:\Liu\MT\TNM085\project\TNM085-cloth-simulation\ClothSimulation\libs;C:\Users\niner\source\repos\TNM085-cloth-simulation\ClothSimulation\libs;C:\Users\NinjaSputnik\source\repos\TNM085-cloth-simulation\ClothSimulation\libs;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\kalle\OneDrive\Dokument\TNM085-cloth-simulation\ClothSimulation\dependencies;E:\Liu\MT\TNM085\project\TNM085-cloth-simulation\ClothSimulation\dependencies;C:\Users\Karl Wastesson\Documents\TNM085\ClothSimulation\dependencies;C:\Users\niner\source\repos\TNM085-cloth-simulation\ClothSimulation\dependencies;C:\Users\NinjaSputnik\source\repos\TNM085-cloth-simulation\ClothSimulation\dependencies;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\kalle\OneDrive\Dokument\TNM085-cloth-simulation\ClothSimulation\libs;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
