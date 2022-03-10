@@ -1,7 +1,8 @@
 ﻿#include "../includes/Cloth.h"
 #include <iostream> // for debugging
+// 2000, 2000, 3000, 2 verlet
 
-Cloth::Cloth(int x_size, int y_size, const glm::vec3& pos): cols(x_size), rows(y_size), k1(2000), k2(2000), k3(3000), damping_c(2), position(pos) {
+Cloth::Cloth(int x_size, int y_size, const glm::vec3& pos): cols(x_size), rows(y_size), k1(2000), k2(2000), k3(3000), damping_c(2), position(pos) { 
 	// Create buffers
 	glGenBuffers(1, &VBO);		// Vertex Buffer Object
 	glGenVertexArrays(1, &VAO);	// Vertex Array Object

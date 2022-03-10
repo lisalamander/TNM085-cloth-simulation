@@ -19,8 +19,8 @@ s = uislider(fig);
 s.Value = 20;
 
 
-% method = "Euler";
-method = "Verlet";
+ method = "Euler";
+%method = "Verlet";
 
 
 

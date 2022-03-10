@@ -125,7 +125,7 @@ int main() {
         sphereShader.use();
         sphereShader.setMat4("model", model);
         sphereShader.setMat4("view", cameraMove);
-        
+        // verlet 0.003
         myCloth.updateSimulation(0.003); 
         myCloth.handleSphereIntersections(sphereRadius, spherePosition);
         
