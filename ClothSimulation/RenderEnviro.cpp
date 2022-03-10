@@ -2,7 +2,7 @@
 
 
 
-void renderEnviroment(Shader& myShader, Texture& floorTex, glm::mat4 cameraMove)
+void renderEnviroment(Shader& myShader, Texture& floorTex, glm::mat4 cameraMove, Texture& balkTex)
 {
 
     //Create floor
@@ -20,7 +20,7 @@ void renderEnviroment(Shader& myShader, Texture& floorTex, glm::mat4 cameraMove)
     model = glm::translate(model, glm::vec3(floorPosition.x, floorPosition.y, floorPosition.z));
 
     myShader.use();
-    glActiveTexture(1);
+    glActiveTexture(2);
     glBindTexture(GL_TEXTURE_2D, floorTex.getID());
     myShader.setMat4("model", model);
     myShader.setMat4("view", cameraMove);
@@ -31,6 +31,8 @@ void renderEnviroment(Shader& myShader, Texture& floorTex, glm::mat4 cameraMove)
     model = glm::translate(model, glm::vec3(balkPosition.x, balkPosition.y, balkPosition.z));
 
     myShader.use();
+    glActiveTexture(2);
+    glBindTexture(GL_TEXTURE_2D, balkTex.getID());
     myShader.setMat4("model", model);
     myShader.setMat4("view", cameraMove);
     balk.render();

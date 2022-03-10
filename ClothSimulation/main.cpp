@@ -95,6 +95,8 @@ int main() {
     Texture floorTex("images/grass.jpg");
     myShader.setInt("texture_", 1);
 
+    Texture balkTex("images/wooden.jpg");
+    myShader.setInt("texture_", 2);
    
     
 
@@ -124,7 +126,7 @@ int main() {
        
                 
         //render Enviro
-        renderEnviroment(myShader, floorTex, cameraMove);
+        renderEnviroment(myShader, floorTex, cameraMove, balkTex);
 
         //Sphere
         glm::mat4 model = glm::mat4(1.0f);

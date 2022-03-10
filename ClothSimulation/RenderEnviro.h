@@ -3,4 +3,4 @@
 #include "includes/TriangleSoup.hpp";
 
 
-void renderEnviroment(Shader& myShader, Texture& floorTex, glm::mat4 cameraMove);
+void renderEnviroment(Shader& myShader, Texture& floorTex, glm::mat4 cameraMove, Texture& BalkTex);
